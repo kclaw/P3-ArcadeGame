@@ -23,6 +23,8 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        collisiondetector = new CollisionDetector(canvas),
+        gamestatus = new GameStatus(),
         lastTime;
 
     canvas.width = 505;
@@ -161,6 +163,11 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        allEnemies.forEach(function(enemy){
+            var img = Resources.get(enemy.sprite);
+            enemy.width = img.width;
+            enemy.height = img.height;
+        });
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -181,4 +188,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.collisiondetector = collisiondetector;
 })(this);

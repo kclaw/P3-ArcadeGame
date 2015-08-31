@@ -58,7 +58,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+         win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -82,9 +82,36 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
+    function checkCollisions(){
+        /* checking whether enemies touch player*/
+        allEnemies.forEach(function(enemy){
+            if(collisiondetector.isCollided(player,enemy)){
+                updateGameStatus('gameover');
+            }
+        });
+        /*checking whether items touch player*/
+        allItems.forEach(function(item){
+            if(collisiondetector.isCollided(player,item)){
+                console.log("item is touched");
+                if(item instanceof Star){
+                    item.update(true);
+                    player.stars.push(item);
+                    var stars = allItems.filter(function(){
+                        if(item instanceof Star)
+                            return true;
+                        return false;
+                    });
+                    if(stars.length == player.stars.length){
+                        updateGameStatus('nextlevel');
+                    }
+                }
+            }
+        });
+
+    }
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
@@ -97,6 +124,34 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    function updateGameStatus(status){
+         console.log('Update Status:'+status);
+         switch(status){
+             case 'initial':
+                 gamestatus.resetGame();
+                 break;
+             case 'running':
+                 gamestatus.startGame();
+                 break;
+             case 'nextlevel':
+                 if(gamestatus.hasNextLevel()){
+                    gamestatus.raiseLevel();
+                    console.info("raise level");
+                 }else{
+                    updateGameStatus('complete');
+                 }
+                 break;
+             case 'complete':
+                 gamestatus.finishGame();
+                 console.info("game is ended");
+                 break;
+             case 'gameover':
+                 gamestatus.gameover();
+                 console.info("gameover");
+                 break;
+         }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -153,8 +208,14 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
+        allItems.forEach(function(item){
+            item.render();
+        });
+        allMessages.forEach(function(message){
+            message.render();
+        });
         player.render();
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -162,13 +223,87 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
-        allEnemies.forEach(function(enemy){
-            var img = Resources.get(enemy.sprite);
-            enemy.width = img.width;
-            enemy.height = img.height;
+        gamestatus.addStatusCallBack('enter','initial',function(){
+            var button = doc.createElement('input');
+            button.type = 'button';
+            button.id = 'start';
+            button.value = 'Start';
+            button.style.position = 'relative';
+            button.style.left = '-'+canvas.width/2 - 30 +'px';
+            button.style.top = '-'+canvas.height/2 +'px';
+            button.addEventListener('click',function(){
+                updateGameStatus('running');
+            });
+            allEnemies = [];
+            allItems = [];
+            allMessages = [];
+            player.reset();
+            doc.body.appendChild(button);
+            gamestatus.resetLevel();
         });
+        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
+        gamestatus.addStatusCallBack('enter','running',function(){
+            var button = doc.getElementById('start');
+            doc.body.removeChild(button);
+        });
+        gamestatus.addStatusCallBack('enter','nextlevel', loadFromGameStatus);
+         gamestatus.addStatusCallBack('enter','nextlevel', function(){
+            player.stars = [];
+         });
+        gamestatus.addStatusCallBack('enter','complete',function(){
+            allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
+        });
+        gamestatus.addStatusCallBack('enter','gameover',function(){
+            var button = doc.createElement('input');
+            button.type = 'button';
+            button.value = 'Retry';
+            button.id = 'retry';
+            button.style.position = 'relative';
+            button.style.left = '-'+canvas.width/2 - 30 +'px';
+            button.style.top = '-'+canvas.height/2 +'px';
+            button.addEventListener('click',function(){
+                updateGameStatus('initial');
+            });
+            doc.body.appendChild(button);
+            allMessages.push(new Message("Game Over",canvas.width/2-160,canvas.height/2));
+        });
+        gamestatus.addStatusCallBack('leave','gameover',function(){
+            var button = doc.getElementById('retry');
+            doc.body.removeChild(button);
+            allMessages = [];
+        });
+        updateGameStatus('initial');
     }
+
+    function loadFromGameStatus(){
+        console.log("called");
+        allItems = [];
+        allEnemies = [];
+
+        var data = gamestatus.getLevelData();
+        console.log(data);
+        var items = data.items;
+        for(var item in items){
+            var obj =  items[item];
+            switch(obj.type){
+                case 'star':
+                    allItems.push(new Star(obj.x,obj.y));
+                    break;
+            }
+        }
+
+        var enemies = data.enemies;
+        for(var enemy in enemies){
+            var obj = enemies[enemy];
+            console.log(obj);
+            switch(obj.type){
+                case 'bug':
+                    console.log(obj.x,obj.y,obj.speed);
+                    allEnemies.push(new Enemy(obj.x,obj.y,obj.speed));
+                    break;
+            }
+        }
+    };
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -179,7 +314,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

@@ -1,43 +1,48 @@
 var CollisionDetector = function(canvas) {
+
     function isCollided(obj1,obj2){
-        if(!obj1||!obj2||!obj1.x||!obj2.x||!obj1.y||!obj2.y){
+        if(!obj1||!obj2||!obj1.boundx||!obj2.boundx||!obj1.boundy||!obj2.boundy){
             console.error("error: parameter not matches");
             return false;
         }
-        if (obj1.x < obj2.x + obj2.width  && obj1.x + obj1.width  > obj2.x &&  obj1.y < obj2.y + obj2.height && obj1.y + obj1.height > obj2.y) {
+        if (obj1.boundx < obj2.boundx + obj2.boundwidth  && obj1.boundx + obj1.boundwidth  > obj2.boundx &&  obj1.boundy < obj2.boundy + obj2.boundheight && obj1.boundy + obj1.boundheight > obj2.boundy) {
             // The objects are touching
             return true;
         }
         return false;
     };
+
     function isOutOfWall(obj){
        // var left = canvas.width - obj.x - obj.width;
-        if(!obj||!obj.x||!obj.width)
+        if(!obj||!obj.boundx||!obj.boundwidth)
             return false;
         //var coord = getCoordinatesinCanvas(obj);
-        if(obj.x>canvas.width||obj.x<0)
+        if(obj.boundx>canvas.width||obj.boundx<0)
             return true;
         return false;
     };
+
     function isAboveCeiling(obj){
-        if(!obj||!obj.y||!obj.height)
+        if(!obj||!obj.boundy||!obj.boundheight)
             return false;
         //var coord= getCoordinatesinCanvas(obj);
-        if(obj.y>canvas.height||obj.y<0)
+        if(obj.boundy>canvas.height||obj.boundy<0)
             return true;
         return false;
     };
+
     function getCoordinatesinCanvas(obj){
         var rect = canvas.getBoundingClientRect();
-        if(!obj||!obj.x||!obj.y)
+        if(!obj||!obj.boundx||!obj.boundy)
             return;
-        var x = (obj.x-rect.left)/(rect.right-rect.left)*canvas.width;
-        var y = (obj.y-rect.top)/(rect.bottom-rect.top)*canvas.height;
+        var x = (obj.boundx-rect.left)/(rect.right-rect.left)*canvas.width;
+        var y = (obj.boundy-rect.top)/(rect.bottom-rect.top)*canvas.height;
         return {
             x: x,
             y: y
         };
     };
+
     return {
         isCollided: function(obj1,obj2){
             return isCollided(obj1,obj2);

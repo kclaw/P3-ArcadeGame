@@ -87,30 +87,7 @@ var Engine = (function(global) {
 
     function checkCollisions(){
         /* checking whether enemies touch player*/
-        allEnemies.forEach(function(enemy){
-            if(collisiondetector.isCollided(player,enemy)){
-                updateGameStatus('gameover');
-            }
-        });
-        /*checking whether items touch player*/
-        allItems.forEach(function(item){
-            if(collisiondetector.isCollided(player,item)){
-                console.log("item is touched");
-                if(item instanceof Star){
-                    item.update(true);
-                    player.stars.push(item);
-                    var stars = allItems.filter(function(){
-                        if(item instanceof Star)
-                            return true;
-                        return false;
-                    });
-                    if(stars.length == player.stars.length){
-                        updateGameStatus('nextlevel');
-                    }
-                }
-            }
-        });
-
+        collisiondetector.checkCollision();
     }
     /* This is called by the update function  and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -136,6 +113,7 @@ var Engine = (function(global) {
                  gamestatus.startGame();
                  break;
              case 'nextlevel':
+                 console.log('has next level'+gamestatus.hasNextLevel());
                  if(gamestatus.hasNextLevel()){
                     gamestatus.raiseLevel();
                     console.info("raise level");
@@ -192,8 +170,6 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
         renderEntities();
     }
 
@@ -223,6 +199,30 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        collisiondetector.subscribeBoundaryCheck('enter','lowerx',player,function(){
+            player.canMoveLeft = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','lowerx',player,function(){
+            player.canMoveLeft = true;
+        });
+        collisiondetector.subscribeBoundaryCheck('enter','abovex',player,function(){
+            player.canMoveRight = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','abovex',player,function(){
+            player.canMoveRight = true;
+        });
+        collisiondetector.subscribeBoundaryCheck('enter','lowery',player,function(){
+            player.canMoveDown = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','lowery',player,function(){
+            player.canMoveDown = true;
+        });
+collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
+            player.canMoveUp = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','abovey',player,function(){
+            player.canMoveUp = true;
+        });
         gamestatus.addStatusCallBack('enter','initial',function(){
             var button = doc.createElement('input');
             button.type = 'button';
@@ -241,15 +241,12 @@ var Engine = (function(global) {
             doc.body.appendChild(button);
             gamestatus.resetLevel();
         });
-        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
-        gamestatus.addStatusCallBack('enter','running',function(){
+       gamestatus.addStatusCallBack('leave','initial',function(){
             var button = doc.getElementById('start');
             doc.body.removeChild(button);
-        });
-        gamestatus.addStatusCallBack('enter','nextlevel', loadFromGameStatus);
-         gamestatus.addStatusCallBack('enter','nextlevel', function(){
-            player.stars = [];
-         });
+        }); gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
+
+        //gamestatus.addStatusCallBack('enter','nextlevel',loadFromGameStatus);
         gamestatus.addStatusCallBack('enter','complete',function(){
             allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
         });
@@ -276,12 +273,11 @@ var Engine = (function(global) {
     }
 
     function loadFromGameStatus(){
-        console.log("called");
+        console.log("loadFromGameStatus");
         allItems = [];
         allEnemies = [];
 
         var data = gamestatus.getLevelData();
-        console.log(data);
         var items = data.items;
         for(var item in items){
             var obj =  items[item];
@@ -303,6 +299,31 @@ var Engine = (function(global) {
                     break;
             }
         }
+        allEnemies.forEach(function(enemy){
+            collisiondetector.subscribeCollisionCheck(player,enemy,function(){
+                updateGameStatus('gameover');
+            });
+        });
+        /*checking whether items touch player*/
+        allItems.forEach(function(item){
+            if(item instanceof Star){
+                collisiondetector.subscribeCollisionCheck(player,item,function(){
+                    item.update(true);
+                    player.stars.push(item);
+                    collisiondetector.unsubscribeCollisionCheck(player,item);
+                    var stars = allItems.filter(function(){
+                        if(item instanceof Star)
+                            return true;
+                        return false;
+                    });
+
+                    if(stars.length == player.stars.length){
+                        player.stars = [];
+                        updateGameStatus('nextlevel');
+                    }
+                });
+            }
+        });
     };
 
     /* Go ahead and load all of the images we know we're going to need to

@@ -22,9 +22,6 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed * dt;
-    if(collisiondetector.isOutOfWall(this)){
-        this.x = 0;
-    }
     this.boundx = this.x;
 };
 
@@ -50,21 +47,33 @@ var Player = function() {
     this.boundy = this.y + 60;
     this.boundwidth = 70;
     this.boundheight = 80;
+
+    this.canMoveLeft = true;
+    this.canMoveRight = true;
+    this.canMoveUp = true;
+    this.canMoveDown = true;
 };
 
 Player.prototype.update = function(dx,dy){
-    this.x += dx ? dx : 0;
-    this.y += dy ? dy : 0;
+    if(dx && typeof(dx) === 'number' && dx<0)
+        if(this.canMoveLeft)
+            this.x += dx;
+    if(dx && typeof(dx) === 'number' && dx>0)
+        if(this.canMoveRight)
+            this.x += dx;
+    if(dy && typeof(dy) === 'number' && dy<0)
+        if(this.canMoveUp)
+            this.y += dy;
+    if(dy && typeof(dy) === 'number' && dy>0)
+        if(this.canMoveDown)
+            this.y += dy;
     this.boundx = this.x + 15;
     this.boundy = this.y + 60;
 };
 
 Player.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    //ctx.rect(this.boundx,this.boundy,this.boundwidth,this.boundheight);
-    //ctx.stroke();
 };
-
 
 Player.prototype.getHeight = function(){
     return this.height;

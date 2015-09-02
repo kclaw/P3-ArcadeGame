@@ -1,17 +1,23 @@
 <html>
 <head>
 <script src="js/collisiondetector.js"></script>
+<script src="js/class.js"></script>
 </head>
 <body>
     <canvas id="c" width="1000" height="1000"></canvas>
 </body>
     <script>
-        obj1 = {width:500,height:500,x:100,y:100};
-        obj2 = {width:500,height:500,x:199,y:199};
+        obj1 = {boundwidth:500,boundheight:500,boundx:0,boundy:100};
+        obj2 = {boundwidth:500,boundheight:500,boundx:199,boundy:199};
         var canvas = document.getElementById("c");
         console.log(canvas);
         var detector = new CollisionDetector(canvas);
-        console.log("collide:"+detector.isCollided(obj1,obj2));
-        console.log("out wall? "+detector.isOutOfWall(obj1));
+        console.log(detector);
+        detector.subsribeBoundaryCheck('lowerx',obj1,function(){alert('hi');});
+       // console.log("collide:"+detector.isCollided(obj1,obj2));
+        detector.subscribeCollisionCheck(obj1,obj2,function(){alert('collide');});
+        detector.checkCollision();
+       // console.log("out wall? "+detector.isOutOfWall(obj1));
+        console.log(obj1==obj2);
     </script>
 </html>

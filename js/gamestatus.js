@@ -2,7 +2,7 @@ var GameStatus = function(){
 
     var current_level = 1;
 
-    var max_level = 2;
+    var max_level = 3;
 
     var current_heart = 3;
 
@@ -76,15 +76,50 @@ var GameStatus = function(){
         }]
     };
 
+    var level_3_data = {
+        "items":[{
+            "type" : "star",
+            "x": 150,
+            "y": 90
+        },{
+            "type" : "star",
+            "x": 350,
+            "y" : 40
+        },{
+            "type" : "star",
+            "x": 400,
+            "y":20
+        }],
+        "enemies":[{
+            "type" : "bug",
+            "speed" : 50,
+            "x" : 0,
+            "y" : 63
+        },{
+            "type" : "bug",
+            "speed" : 150,
+            "x" : 0,
+            "y" : 126
+        },{
+            "type" : "bug",
+            "speed" : 200,
+            "x":0,
+            "y":193
+        }]
+    };
+
     var level_data_map = {
         1 : level_1_data,
         2 : level_2_data,
+        3 : level_3_data
     };
 
     function raiseLevel(){
         current_level++;
         changeStatus('nextlevel');
         current_status = 'nextlevel';
+        changeStatus('running');
+        current_status = 'running';
     };
 
     function getLevelData(){

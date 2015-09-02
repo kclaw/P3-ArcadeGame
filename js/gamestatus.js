@@ -97,12 +97,12 @@ var GameStatus = function(){
             "y" : 63
         },{
             "type" : "bug",
-            "speed" : 150,
+            "speed" : 100,
             "x" : 0,
             "y" : 126
         },{
             "type" : "bug",
-            "speed" : 200,
+            "speed" : 100,
             "x":0,
             "y":193
         }]

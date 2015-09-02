@@ -248,9 +248,9 @@ var Engine = (function(global) {
        gamestatus.addStatusCallBack('leave','initial',function(){
             var button = doc.getElementById('start');
             doc.body.removeChild(button);
-        }); gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
+        });
+        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
 
-        //gamestatus.addStatusCallBack('enter','nextlevel',loadFromGameStatus);
         gamestatus.addStatusCallBack('enter','complete',function(){
             allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
         });
@@ -306,6 +306,7 @@ var Engine = (function(global) {
         }
         allEnemies.forEach(function(enemy){
             collisiondetector.subscribeCollisionCheck(player,enemy,function(){
+                collisiondetector.unsubscribeCollisionCheck(player,enemy);
                 updateGameStatus('gameover');
             });
         });

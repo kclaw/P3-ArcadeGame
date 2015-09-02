@@ -23,6 +23,11 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x += this.speed * dt;
     this.boundx = this.x;
+
+    if(collisiondetector.isOutOfWall(this)){
+        this.x = 0;
+        this.boundx = 0;
+    }
 };
 
 // Draw the enemy on the screen, required method for game

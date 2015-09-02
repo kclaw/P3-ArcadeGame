@@ -223,7 +223,8 @@ var CollisionDetector = function(canvas) {
         subscribeBoundaryCheck:subscribeBoundaryCheck,
         subscribeCollisionCheck:subscribeCollisionCheck,
         unsubscribeCollisionCheck:unsubscribeCollisionCheck,
-        checkCollision:checkCollision
+        checkCollision:checkCollision,
+        isOutOfWall:isOutOfWall
     };
 
 };

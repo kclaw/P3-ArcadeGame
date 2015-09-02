@@ -15,3 +15,8 @@ Lose:
 
 Getting touched by bug
 
+Control:
+Left Arrow <=
+Right Arrow =>
+Up Arrow ^
+Down Arrow v

@@ -41,7 +41,6 @@ var CollisionDetector = function(canvas) {
     * It returns true when obj is go beyound canvas width. Otherwise,it returns false.
     */
     function isOutOfWall(obj){
-        console.log(canvas.width + ' ' +obj.boundx);
        // var left = canvas.width - obj.x - obj.width;
         if(!isObjectWithBound(obj))
             return false;
@@ -55,7 +54,6 @@ var CollisionDetector = function(canvas) {
     * It returns true when obj is inside canvas. Otherwise,it returns false.
     */
     function isInsideCanvas(obj){
-        console.log(obj.boundx+' '+obj.boundy);
         if(!isObjectWithBound(obj))
             return false;
         if(obj.boundx+obj.boundwidth<canvas.width && obj.boundx+obj.boundwidth>0 && obj.boundy+obj.boundheight<canvas.height && obj.boundy+obj.boundheight>0)

@@ -1,18 +1,30 @@
 var CollisionDetector = function(canvas) {
+    /*handle callback function(s) when is across the x-axis*/
     var enterBelowBoundaryXAxisHandler = [];
+    /*handle callback function(s) when not crossing the x-axis*/
     var leaveBelowBoundaryXAxisHandler = [];
 
+    /*handle callback function(s) when runs out of canvas's width*/
     var enterAboveBoundaryXAxisHandler = [];
+    /*handke callback function(s) when not running out of canvas's width*/
     var leaveAboveBoundaryXAxisHandler = [];
 
+    /*handle callback function(s) when runs out of canvas's height*/
     var enterBelowBoundaryYAxisHandler = [];
+    /*handle callback function(s) when not running out of the y-axis*/
     var leaveBelowBoundaryYAxisHandler = [];
 
+    /*handle callback function(s) when crossing the y-axis*/
     var enterAboveBoundaryYAxisHandler = [];
+    /*handle callback function(s) when not crossing the y-axis*/
     var leaveAboveBoundaryYAxisHandler = [];
 
+    /*handle callback function(s) when collision occurs*/
     var collisionHandler = [];
 
+    /*This function checks whether is collided between obj1 and obj2.
+    *  It returns true when collision is happened. Otherwise,it returns false
+    */
     function isCollided(obj1,obj2){
         if(!isObjectWithBound(obj1) || !isObjectWithBound(obj2)){
             console.error("error: parameter not matches");
@@ -25,7 +37,9 @@ var CollisionDetector = function(canvas) {
         return false;
     };
 
-
+    /*This function checks obj whether is go beyound canvas width.
+    * It returns true when obj is go beyound canvas width. Otherwise,it returns false.
+    */
     function isOutOfWall(obj){
         console.log(canvas.width + ' ' +obj.boundx);
        // var left = canvas.width - obj.x - obj.width;
@@ -37,7 +51,9 @@ var CollisionDetector = function(canvas) {
         return false;
     };
 
-
+    /*This function checks obj whether is inside canvas depending on its boundx and boundy value
+    * It returns true when obj is inside canvas. Otherwise,it returns false.
+    */
     function isInsideCanvas(obj){
         console.log(obj.boundx+' '+obj.boundy);
         if(!isObjectWithBound(obj))
@@ -47,7 +63,9 @@ var CollisionDetector = function(canvas) {
         return false;
     };
 
-
+    /*This function checks obj whether is above y-axis according to its boundy value
+    * It returns true when obj is above y-axis. Otherwise,it returns false.
+    */
     function isAboveCeiling(obj){
         if(!isObjectWithBound(obj))
             return false;
@@ -58,10 +76,7 @@ var CollisionDetector = function(canvas) {
     };
 
     /*
-        lowerx:
-        higherx:
-        lowery:
-        highery:
+    * This function add callback function(s) to corresponding handler(s) related to boundary checking.
     */
     function subscribeBoundaryCheck(when,type,obj,action){
         console.log('subscribeBoundaryCheck: '+type);
@@ -96,13 +111,24 @@ var CollisionDetector = function(canvas) {
         }else{
             console.error("subsribeBoundaryCheck: parameter not matches");
         }
-    };
+    }
+
+    /*
+    * This function remove callback function(s) from collsion handler.
+    */
     function unsubscribeBoundaryCheck(obj){
-    };
+    }
+
+    /*
+    * This function add callback function(s) to collision handler
+    */
     function subscribeCollisionCheck(obj1,obj2,callback){
         collisionHandler.push({'object1':obj1,'object2':obj2,'event':callback});
-    };
+    }
 
+    /*
+    * This function remove callback function(s) from collision handler.
+    */
     function unsubscribeCollisionCheck(obj1,obj2){
         console.log('before' + collisionHandler.length);
         for(check in collisionHandler){
@@ -111,8 +137,10 @@ var CollisionDetector = function(canvas) {
                 collisionHandler.splice(check,1);
         }
         console.log('after' + collisionHandler.length);
-    };
+    }
 
+    /* This function checks both collision and boundary based on situation.
+    It would trigger callbacks function inside handler when matches corresponding situation.*/
     function checkCollision(){
         enterBelowBoundaryXAxisHandler.forEach(function(handler){
             if(handler.object.boundx<=0){
@@ -145,7 +173,7 @@ var CollisionDetector = function(canvas) {
             }
         });
         enterAboveBoundaryYAxisHandler.forEach(function(handler){
- if(handler.object.boundy<=0){
+            if(handler.object.boundy<=0){
                 console.log('above y-axis boundary is triggered');
                 handler.event();
             }else{
@@ -160,18 +188,25 @@ var CollisionDetector = function(canvas) {
                 handler.event();
             }
         });
-    };
+    }
 
+    /* This function validate objects with boundx,boundy,boundwidth,boundheight properties
+    * It returns true when all properties are found.Otherwise,it returns false.
+    */
     function isObjectWithBound(obj){
         if('boundx' in obj && 'boundy' in obj && 'boundwidth' in obj && 'boundheight' in obj)
             return true;
         return false;
-    };
-
+    }
+    /*This function validate obj whether is function
+    * It returns true when obj is a function. Otherwise,it returns false.
+    */
     function isFunction(obj){
         return obj && {}.toString.call(obj) == '[object Function]';
-    };
-
+    }
+    /*
+    * This function retrieve position of obj in term of x and y
+    */
     function getCoordinatesinCanvas(obj){
         var rect = canvas.getBoundingClientRect();
         if(!obj||!obj.boundx||!obj.boundy)
@@ -182,7 +217,7 @@ var CollisionDetector = function(canvas) {
             x: x,
             y: y
         };
-    };
+    }
 
     return {
         subscribeBoundaryCheck:subscribeBoundaryCheck,

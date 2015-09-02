@@ -103,6 +103,9 @@ var Engine = (function(global) {
         player.update();
     }
 
+    /* This is called by update function and handle all procedures executed in each status of this game
+     *  In different status, callback function(s) which has added in reset function  would be called.
+     */
     function updateGameStatus(status){
          console.log('Update Status:'+status);
          switch(status){
@@ -197,6 +200,7 @@ var Engine = (function(global) {
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
+     * Since it's called once before start. It suits for putting  assignment of callback(s).
      */
     function reset() {
         collisiondetector.subscribeBoundaryCheck('enter','lowerx',player,function(){
@@ -217,7 +221,7 @@ var Engine = (function(global) {
         collisiondetector.subscribeBoundaryCheck('leave','lowery',player,function(){
             player.canMoveDown = true;
         });
-collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
+        collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
             player.canMoveUp = false;
         });
         collisiondetector.subscribeBoundaryCheck('leave','abovey',player,function(){
@@ -272,6 +276,7 @@ collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
         updateGameStatus('initial');
     }
 
+    /*This function loads game data on each level starts*/
     function loadFromGameStatus(){
         console.log("loadFromGameStatus");
         allItems = [];
@@ -324,7 +329,7 @@ collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
                 });
             }
         });
-    };
+    }
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
@@ -345,5 +350,4 @@ collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
      * from within their app.js files.
      */
     global.ctx = ctx;
-    global.collisiondetector = collisiondetector;
 })(this);

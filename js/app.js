@@ -55,18 +55,14 @@ var Player = function() {
 };
 
 Player.prototype.update = function(dx,dy){
-    if(dx && typeof(dx) === 'number' && dx<0)
-        if(this.canMoveLeft)
-            this.x += dx;
-    if(dx && typeof(dx) === 'number' && dx>0)
-        if(this.canMoveRight)
-            this.x += dx;
-    if(dy && typeof(dy) === 'number' && dy<0)
-        if(this.canMoveUp)
-            this.y += dy;
-    if(dy && typeof(dy) === 'number' && dy>0)
-        if(this.canMoveDown)
-            this.y += dy;
+    if(dx && typeof(dx) === 'number' && dx<0 && this.canMoveLeft)
+        this.x += dx;
+    if(dx && typeof(dx) === 'number' && dx>0 && this.canMoveRight)
+        this.x += dx;
+    if(dy && typeof(dy) === 'number' && dy<0 && this.canMoveUp)
+        this.y += dy;
+    if(dy && typeof(dy) === 'number' && dy>0 && this.canMoveDown)
+        this.y += dy;
     this.boundx = this.x + 15;
     this.boundy = this.y + 60;
 };

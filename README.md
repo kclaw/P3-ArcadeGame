@@ -1,6 +1,17 @@
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+In this game, you are a boy who collects stars in the surrounding envirnment.
 
-for self-checking their submission.
+If you collects all of star nearby, you would jump to a higher level and take more chanellege.
+
+The chanellege comes from bug(s) who runs across street. They would slay you when you are getting touched.
+
+So to Win :
+
+Collect all Star(s) and pass all level
+
+Lose:
+
+Getting touched by bug
+

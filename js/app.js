@@ -60,13 +60,13 @@ var Player = function() {
 };
 
 Player.prototype.update = function(dx, dy){
-    if(dx && typeof(dx) === 'number' && dx < 0 && this.canMoveLeft)
+    if(dx && typeof(dx) === 'number' && dx < 0)
         this.x += dx;
-    if(dx && typeof(dx) === 'number' && dx > 0 && this.canMoveRight)
+    if(dx && typeof(dx) === 'number' && dx > 0)
         this.x += dx;
-    if(dy && typeof(dy) === 'number' && dy < 0 && this.canMoveUp)
+    if(dy && typeof(dy) === 'number' && dy < 0)
         this.y += dy;
-    if(dy && typeof(dy) === 'number' && dy > 0 && this.canMoveDown)
+    if(dy && typeof(dy) === 'number' && dy > 0)
         this.y += dy;
     this.boundx = this.x + 15;
     this.boundy = this.y + 60;
@@ -90,16 +90,20 @@ Player.prototype.reset = function(){
 Player.prototype.handleInput = function(key){
     switch(key){
         case 'up':
-            this.update(0, -20);
+            if(this.canMoveUp)
+                this.update(0, -20);
             break;
         case 'down':
-            this.update(0, 20);
+            if(this.canMoveDown)
+                this.update(0, 20);
             break;
         case 'left':
-            this.update(-20, 0);
+            if(this.canMoveLeft)
+                this.update(-20, 0);
             break;
         case 'right':
-            this.update(20, 0);
+            if(this.canMoveRight)
+                this.update(20, 0);
             break;
     }
 };

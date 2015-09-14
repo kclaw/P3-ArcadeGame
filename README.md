@@ -16,7 +16,7 @@ Lose:
 Getting touched by bug
 
 Control:
-Left Arrow <=
-Right Arrow =>
-Up Arrow ^
-Down Arrow v
+Left Arrow Button,
+Right Arrow Button,
+Up Arrow Button,
+Down Arrow Button

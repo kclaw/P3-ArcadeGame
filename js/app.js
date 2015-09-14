@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x,y,speed) {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x ? x : 0;
@@ -59,14 +59,14 @@ var Player = function() {
     this.canMoveDown = true;
 };
 
-Player.prototype.update = function(dx,dy){
-    if(dx && typeof(dx) === 'number' && dx<0 && this.canMoveLeft)
+Player.prototype.update = function(dx, dy){
+    if(dx && typeof(dx) === 'number' && dx < 0 && this.canMoveLeft)
         this.x += dx;
-    if(dx && typeof(dx) === 'number' && dx>0 && this.canMoveRight)
+    if(dx && typeof(dx) === 'number' && dx > 0 && this.canMoveRight)
         this.x += dx;
-    if(dy && typeof(dy) === 'number' && dy<0 && this.canMoveUp)
+    if(dy && typeof(dy) === 'number' && dy < 0 && this.canMoveUp)
         this.y += dy;
-    if(dy && typeof(dy) === 'number' && dy>0 && this.canMoveDown)
+    if(dy && typeof(dy) === 'number' && dy > 0 && this.canMoveDown)
         this.y += dy;
     this.boundx = this.x + 15;
     this.boundy = this.y + 60;
@@ -90,16 +90,16 @@ Player.prototype.reset = function(){
 Player.prototype.handleInput = function(key){
     switch(key){
         case 'up':
-            this.update(0,-20);
+            this.update(0, -20);
             break;
         case 'down':
-            this.update(0,20);
+            this.update(0, 20);
             break;
         case 'left':
-            this.update(-20,0);
+            this.update(-20, 0);
             break;
         case 'right':
-            this.update(20,0);
+            this.update(20, 0);
             break;
     }
 };
@@ -123,24 +123,24 @@ Star.prototype.update = function(eaten){
 
 Star.prototype.render = function(){
     if(!this.eaten)
-        ctx.drawImage(Resources.get(this.sprite),this.x,this.y);
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
 
-var Message = function(message,x,y){
+var Message = function(message, x, y){
     this.x = x;
     this.y = y;
     this.message = message;
 };
-Message.prototype.update = function(message,x,y){
+Message.prototype.update = function(message, x, y){
     this.x = x;
     this.y = y;
     this.message = message;
 };
 Message.prototype.render = function(){
     ctx.font = "80px Georgia";
-    ctx.strokeText(this.message,this.x,this.y);
+    ctx.strokeText(this.message, this.x, this.y);
 };
 
 

@@ -161,7 +161,7 @@ var CollisionDetector = function(canvas) {
             }
         });
         enterBelowBoundaryYAxisHandler.forEach(function(handler){
-            if(handler.object.boundy+handler.object.boundheight>=canvas.height){
+            if(handler.object.boundy+handler.object.boundheight>=canvas.height-83){
                 console.log('below y-axis boundary is triggered');
                 handler.event();
             }else{
@@ -171,7 +171,7 @@ var CollisionDetector = function(canvas) {
             }
         });
         enterAboveBoundaryYAxisHandler.forEach(function(handler){
-            if(handler.object.boundy<=0){
+            if(handler.object.boundy<=83){
                 console.log('above y-axis boundary is triggered');
                 handler.event();
             }else{

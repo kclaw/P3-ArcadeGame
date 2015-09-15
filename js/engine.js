@@ -125,6 +125,8 @@ var Engine = (function(global) {
             button.style.left = '-'+canvas.width/2 - 30 +'px';
             button.style.top = '-'+canvas.height/2 +'px';
             button.addEventListener('click',function(){
+                reset();
+                player.stars = [];
                 updateGameStatus('initial');
             });
             doc.body.appendChild(button);

@@ -68,6 +68,74 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
+        collisiondetector.subscribeBoundaryCheck('enter','lowerx',player,function(){
+            player.canMoveLeft = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','lowerx',player,function(){
+            player.canMoveLeft = true;
+        });
+        collisiondetector.subscribeBoundaryCheck('enter','abovex',player,function(){
+            player.canMoveRight = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','abovex',player,function(){
+            player.canMoveRight = true;
+        });
+        collisiondetector.subscribeBoundaryCheck('enter','lowery',player,function(){
+            player.canMoveDown = false;
+        });
+        collisiondetector.subscribeBoundaryCheck('leave','lowery',player,function(){
+            player.canMoveDown = true;
+        });
+        collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
+            player.canMoveUp = false;
+            player.reset();
+        });
+                    collisiondetector.subscribeBoundaryCheck('leave','abovey',player,function(){
+            player.canMoveUp = true;
+        });
+        gamestatus.addStatusCallBack('enter','initial',function(){
+            var button = doc.createElement('input');
+            button.type = 'button';
+            button.id = 'start';
+            button.value = 'Start';
+            button.style.position = 'relative';
+            button.style.left = '-'+canvas.width/2 - 30 +'px';
+            button.style.top = '-'+canvas.height/2 +'px';
+            button.addEventListener('click',function(){
+                updateGameStatus('running');
+            });
+            doc.body.appendChild(button);
+            gamestatus.resetLevel();
+        });
+       gamestatus.addStatusCallBack('leave','initial',function(){
+            var button = doc.getElementById('start');
+            doc.body.removeChild(button);
+        });
+        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
+
+        gamestatus.addStatusCallBack('enter','complete',function(){
+            allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
+        });
+        gamestatus.addStatusCallBack('enter','gameover',function(){
+            var button = doc.createElement('input');
+            button.type = 'button';
+            button.value = 'Retry';
+            button.id = 'retry';
+            button.style.position = 'relative';
+            button.style.left = '-'+canvas.width/2 - 30 +'px';
+            button.style.top = '-'+canvas.height/2 +'px';
+            button.addEventListener('click',function(){
+                updateGameStatus('initial');
+            });
+            doc.body.appendChild(button);
+            allMessages.push(new Message("Game Over",canvas.width/2-160,canvas.height/2));
+        });
+        gamestatus.addStatusCallBack('leave','gameover',function(){
+            var button = doc.getElementById('retry');
+            doc.body.removeChild(button);
+            allMessages = [];
+        });
+        updateGameStatus('initial');
         main();
     }
 
@@ -204,77 +272,10 @@ var Engine = (function(global) {
      * Since it's called once before start. It suits for putting  assignment of callback(s).
      */
     function reset() {
-        collisiondetector.subscribeBoundaryCheck('enter','lowerx',player,function(){
-            player.canMoveLeft = false;
-        });
-        collisiondetector.subscribeBoundaryCheck('leave','lowerx',player,function(){
-            player.canMoveLeft = true;
-        });
-        collisiondetector.subscribeBoundaryCheck('enter','abovex',player,function(){
-            player.canMoveRight = false;
-        });
-        collisiondetector.subscribeBoundaryCheck('leave','abovex',player,function(){
-            player.canMoveRight = true;
-        });
-        collisiondetector.subscribeBoundaryCheck('enter','lowery',player,function(){
-            player.canMoveDown = false;
-        });
-        collisiondetector.subscribeBoundaryCheck('leave','lowery',player,function(){
-            player.canMoveDown = true;
-        });
-        collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
-            player.canMoveUp = false;
-        });
-        collisiondetector.subscribeBoundaryCheck('leave','abovey',player,function(){
-            player.canMoveUp = true;
-        });
-        gamestatus.addStatusCallBack('enter','initial',function(){
-            var button = doc.createElement('input');
-            button.type = 'button';
-            button.id = 'start';
-            button.value = 'Start';
-            button.style.position = 'relative';
-            button.style.left = '-'+canvas.width/2 - 30 +'px';
-            button.style.top = '-'+canvas.height/2 +'px';
-            button.addEventListener('click',function(){
-                updateGameStatus('running');
-            });
-            allEnemies = [];
-            allItems = [];
-            allMessages = [];
-            player.reset();
-            doc.body.appendChild(button);
-            gamestatus.resetLevel();
-        });
-       gamestatus.addStatusCallBack('leave','initial',function(){
-            var button = doc.getElementById('start');
-            doc.body.removeChild(button);
-        });
-        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
-
-        gamestatus.addStatusCallBack('enter','complete',function(){
-            allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
-        });
-        gamestatus.addStatusCallBack('enter','gameover',function(){
-            var button = doc.createElement('input');
-            button.type = 'button';
-            button.value = 'Retry';
-            button.id = 'retry';
-            button.style.position = 'relative';
-            button.style.left = '-'+canvas.width/2 - 30 +'px';
-            button.style.top = '-'+canvas.height/2 +'px';
-            button.addEventListener('click',function(){
-                updateGameStatus('initial');
-            });
-            doc.body.appendChild(button);
-            allMessages.push(new Message("Game Over",canvas.width/2-160,canvas.height/2));
-        });
-        gamestatus.addStatusCallBack('leave','gameover',function(){
-            var button = doc.getElementById('retry');
-            doc.body.removeChild(button);
-            allMessages = [];
-        });
-        updateGameStatus('initial');
+        allEnemies = [];
+        allItems = [];
+        allMessages = [];
+        player.reset();
     }
 
     /*This function loads game data on each level starts*/

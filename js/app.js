@@ -84,7 +84,6 @@ Player.prototype.reset = function(){
     console.log("player reset: initialx:"+ this.initialx + " initialy:"+this.initialy);
     this.x = this.initialx;
     this.y = this.initialy;
-    this.stars = [];
 };
 
 Player.prototype.handleInput = function(key){

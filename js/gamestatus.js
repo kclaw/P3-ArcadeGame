@@ -1,11 +1,5 @@
 var GameStatus = function(){
 
-    var current_level = 1;
-
-    var max_level = 3;
-
-    var current_heart = 3;
-
     var current_status = 'none';
 
     var status = ['initial','running','nextlevel','complete','gameover'];
@@ -43,95 +37,21 @@ var GameStatus = function(){
         'leavegameover' : leave_gameover_status_callback
     };
 
-    var level_1_data = {
-        "items":[{
-            "type" : "star",
-            "x": 200,
-            "y": 200
-        }],
-        "enemies":[{
-            "type" : "bug",
-            "speed" : 50,
-            "x" : 0,
-            "y" : 63
-        }]
-    };
-
-    var level_2_data = {
-        "items":[{
-            "type" : "star",
-            "x": 150,
-            "y": 90
-        }],
-        "enemies":[{
-            "type" : "bug",
-            "speed" : 50,
-            "x" : 0,
-            "y" : 63
-        },{
-            "type" : "bug",
-            "speed" : 150,
-            "x" : 0,
-            "y" : 126
-        }]
-    };
-
-    var level_3_data = {
-        "items":[{
-            "type" : "star",
-            "x": 150,
-            "y": 90
-        },{
-            "type" : "star",
-            "x": 350,
-            "y" : 40
-        },{
-            "type" : "star",
-            "x": 400,
-            "y":20
-        }],
-        "enemies":[{
-            "type" : "bug",
-            "speed" : 50,
-            "x" : 0,
-            "y" : 63
-        },{
-            "type" : "bug",
-            "speed" : 100,
-            "x" : 0,
-            "y" : 126
-        },{
-            "type" : "bug",
-            "speed" : 100,
-            "x":0,
-            "y":193
-        }]
-    };
-
-    var level_data_map = {
-        1 : level_1_data,
-        2 : level_2_data,
-        3 : level_3_data
-    };
+    var level = new Level();
 
     /*This function is called when player has completed it level*/
     function raiseLevel(){
-        current_level++;
+        level.raiseLevel();
         changeStatus('nextlevel');
         current_status = 'nextlevel';
         changeStatus('running');
         current_status = 'running';
-    };
-
-    /*This function returns game data in current level*/
-    function getLevelData(){
-        console.log("current level:" + current_level);
-        return level_data_map[current_level];
     }
 
-    /* not used*/
-    function breakHeart(){
-        current_heart--;
+    /*This function delegate to Level.getLevelData() and return data loading to game based on current level*/
+    function getLevelData(){
+        console.log("current level:" + level.getCurrentLevel());
+        return level.getLevelData();
     }
 
     /*This function is called when player is going to start the game*/
@@ -163,16 +83,14 @@ var GameStatus = function(){
         return current_status;
     }
 
-    /*This function checks whether has next level*/
+    /*This function delegated to Level.hasNextLevel() and checks whether has next level*/
     function hasNextLevel(){
-        if(current_level == max_level)
-            return false;
-        return true;
+        return level.hasNextLevel();
     }
 
-    /*This function set current level to start level*/
+    /*This function delegated to Level.resetLevel and set current level to start level*/
     function resetLevel(){
-        current_level = 1;
+        level.resetLevel();
     }
 
     /*This function is called when status from one to another

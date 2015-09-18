@@ -13,8 +13,8 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
-var Engine = (function(global) {
+var Engine = (function (global) {
+    "use strict";
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
@@ -58,7 +58,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-         win.requestAnimationFrame(main);
+        win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,
@@ -68,71 +68,71 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
-        collisiondetector.subscribeBoundaryCheck('enter','lowerx',player,function(){
+        collisiondetector.subscribeBoundaryCheck('enter', 'lowerx', player, function () {
             player.canMoveLeft = false;
         });
-        collisiondetector.subscribeBoundaryCheck('leave','lowerx',player,function(){
+        collisiondetector.subscribeBoundaryCheck('leave', 'lowerx', player, function () {
             player.canMoveLeft = true;
         });
-        collisiondetector.subscribeBoundaryCheck('enter','abovex',player,function(){
+        collisiondetector.subscribeBoundaryCheck('enter', 'abovex', player, function () {
             player.canMoveRight = false;
         });
-        collisiondetector.subscribeBoundaryCheck('leave','abovex',player,function(){
+        collisiondetector.subscribeBoundaryCheck('leave', 'abovex', player, function () {
             player.canMoveRight = true;
         });
-        collisiondetector.subscribeBoundaryCheck('enter','lowery',player,function(){
+        collisiondetector.subscribeBoundaryCheck('enter', 'lowery', player, function () {
             player.canMoveDown = false;
         });
-        collisiondetector.subscribeBoundaryCheck('leave','lowery',player,function(){
+        collisiondetector.subscribeBoundaryCheck('leave', 'lowery', player, function () {
             player.canMoveDown = true;
         });
-        collisiondetector.subscribeBoundaryCheck('enter','abovey',player,function(){
+        collisiondetector.subscribeBoundaryCheck('enter', 'abovey', player, function () {
             player.canMoveUp = false;
             player.reset();
         });
-                    collisiondetector.subscribeBoundaryCheck('leave','abovey',player,function(){
+        collisiondetector.subscribeBoundaryCheck('leave', 'abovey', player, function () {
             player.canMoveUp = true;
         });
-        gamestatus.addStatusCallBack('enter','initial',function(){
+        gamestatus.addStatusCallBack('enter', 'initial', function () {
             var button = doc.createElement('input');
             button.type = 'button';
             button.id = 'start';
             button.value = 'Start';
             button.style.position = 'relative';
-            button.style.left = '-'+canvas.width/2 - 30 +'px';
-            button.style.top = '-'+canvas.height/2 +'px';
-            button.addEventListener('click',function(){
+            button.style.left = '-' + canvas.width / 2 - 30 + 'px';
+            button.style.top = '-' + canvas.height / 2 + 'px';
+            button.addEventListener('click', function () {
                 updateGameStatus('running');
             });
             doc.body.appendChild(button);
             gamestatus.resetLevel();
         });
-       gamestatus.addStatusCallBack('leave','initial',function(){
+        gamestatus.addStatusCallBack('leave', 'initial', function () {
             var button = doc.getElementById('start');
             doc.body.removeChild(button);
         });
-        gamestatus.addStatusCallBack('enter','running',loadFromGameStatus);
+        gamestatus.addStatusCallBack('enter', 'running', loadFromGameStatus);
 
-        gamestatus.addStatusCallBack('enter','complete',function(){
-            allMessages.push(new Message("Win",canvas.width/2-160,canvas.height/2));
+        gamestatus.addStatusCallBack('enter', 'complete', function () {
+            allMessages.push(new Message("Win", canvas.width / 2 - 160, canvas.height / 2));
         });
-        gamestatus.addStatusCallBack('enter','gameover',function(){
+        gamestatus.addStatusCallBack('enter', 'gameover', function () {
             var button = doc.createElement('input');
             button.type = 'button';
             button.value = 'Retry';
             button.id = 'retry';
             button.style.position = 'relative';
-            button.style.left = '-'+canvas.width/2 - 30 +'px';
-            button.style.top = '-'+canvas.height/2 +'px';
-            button.addEventListener('click',function(){
+            button.style.left = '-' + canvas.width / 2 - 30 + 'px';
+            button.style.top = '-' + canvas.height / 2 + 'px';
+            button.addEventListener('click', function () {
                 reset();
                 player.stars = [];
                 updateGameStatus('initial');
             });
             doc.body.appendChild(button);
-            allMessages.push(new Message("Game Over",canvas.width/2-160,canvas.height/2));
+            allMessages.push(new Message("Game Over", canvas.width / 2 - 160, canvas.height / 2));
         });
-        gamestatus.addStatusCallBack('leave','gameover',function(){
+        gamestatus.addStatusCallBack('leave', 'gameover', function () {
             var button = doc.getElementById('retry');
             doc.body.removeChild(button);
             allMessages = [];
@@ -155,7 +155,7 @@ var Engine = (function(global) {
         checkCollisions();
     }
 
-    function checkCollisions(){
+    function checkCollisions() {
         /* checking whether enemies touch player*/
         collisiondetector.checkCollision();
     }
@@ -167,7 +167,7 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
         player.update();
@@ -176,33 +176,33 @@ var Engine = (function(global) {
     /* This is called by update function and handle all procedures executed in each status of this game
      *  In different status, callback function(s) which has added in reset function  would be called.
      */
-    function updateGameStatus(status){
-         console.log('Update Status:'+status);
-         switch(status){
-             case 'initial':
-                 gamestatus.resetGame();
-                 break;
-             case 'running':
-                 gamestatus.startGame();
-                 break;
-             case 'nextlevel':
-                 console.log('has next level'+gamestatus.hasNextLevel());
-                 if(gamestatus.hasNextLevel()){
-                    gamestatus.raiseLevel();
-                    console.info("raise level");
-                 }else{
-                    updateGameStatus('complete');
-                 }
-                 break;
-             case 'complete':
-                 gamestatus.finishGame();
-                 console.info("game is ended");
-                 break;
-             case 'gameover':
-                 gamestatus.gameover();
-                 console.info("gameover");
-                 break;
-         }
+    function updateGameStatus(status) {
+        console.log('Update Status:' + status);
+        switch (status) {
+        case 'initial':
+            gamestatus.resetGame();
+            break;
+        case 'running':
+            gamestatus.startGame();
+            break;
+        case 'nextlevel':
+            console.log('has next level' + gamestatus.hasNextLevel());
+            if (gamestatus.hasNextLevel()) {
+                gamestatus.raiseLevel();
+                console.info("raise level");
+            } else {
+                updateGameStatus('complete');
+            }
+            break;
+        case 'complete':
+            gamestatus.finishGame();
+            console.info("game is ended");
+            break;
+        case 'gameover':
+            gamestatus.gameover();
+            console.info("gameover");
+            break;
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -215,14 +215,14 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
+                'images/water-block.png', // Top row is water
+                'images/stone-block.png', // Row 1 of 3 of stone
+                'images/stone-block.png', // Row 2 of 3 of stone
+                'images/stone-block.png', // Row 3 of 3 of stone
+                'images/grass-block.png', // Row 1 of 2 of grass
+                'images/grass-block.png' // Row 2 of 2 of grass
             ],
             numRows = 6,
             numCols = 5,
@@ -255,13 +255,13 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.render();
         });
-        allItems.forEach(function(item){
+        allItems.forEach(function (item) {
             item.render();
         });
-        allMessages.forEach(function(message){
+        allMessages.forEach(function (message) {
             message.render();
         });
         player.render();
@@ -281,53 +281,53 @@ var Engine = (function(global) {
     }
 
     /*This function loads game data on each level starts*/
-    function loadFromGameStatus(){
+    function loadFromGameStatus() {
         console.log("loadFromGameStatus");
         allItems = [];
         allEnemies = [];
 
         var data = gamestatus.getLevelData();
         var items = data.items;
-        for(var item in items){
-            var obj =  items[item];
-            switch(obj.type){
-                case 'star':
-                    allItems.push(new Star(obj.x,obj.y));
-                    break;
+        for (var item in items) {
+            var obj = items[item];
+            switch (obj.type) {
+            case 'star':
+                allItems.push(new Star(obj.x, obj.y));
+                break;
             }
         }
 
         var enemies = data.enemies;
-        for(var enemy in enemies){
-            var obj = enemies[enemy];
-            console.log(obj);
-            switch(obj.type){
-                case 'bug':
-                    console.log(obj.x,obj.y,obj.speed);
-                    allEnemies.push(new Enemy(obj.x,obj.y,obj.speed));
-                    break;
+        for (var enemy in enemies) {
+            var obj2 = enemies[enemy];
+            console.log(obj2);
+            switch (obj2.type) {
+            case 'bug':
+                console.log(obj2.x, obj2.y, obj2.speed);
+                allEnemies.push(new Enemy(obj2.x, obj2.y, obj2.speed));
+                break;
             }
         }
-        allEnemies.forEach(function(enemy){
-            collisiondetector.subscribeCollisionCheck(player,enemy,function(){
-                collisiondetector.unsubscribeCollisionCheck(player,enemy);
+        allEnemies.forEach(function (enemy) {
+            collisiondetector.subscribeCollisionCheck(player, enemy, function () {
+                collisiondetector.unsubscribeCollisionCheck(player, enemy);
                 updateGameStatus('gameover');
             });
         });
         /*checking whether items touch player*/
-        allItems.forEach(function(item){
-            if(item instanceof Star){
-                collisiondetector.subscribeCollisionCheck(player,item,function(){
+        allItems.forEach(function (item) {
+            if (item instanceof Star) {
+                collisiondetector.subscribeCollisionCheck(player, item, function () {
                     item.update(true);
                     player.stars.push(item);
-                    collisiondetector.unsubscribeCollisionCheck(player,item);
-                    var stars = allItems.filter(function(){
-                        if(item instanceof Star)
+                    collisiondetector.unsubscribeCollisionCheck(player, item);
+                    var stars = allItems.filter(function () {
+                        if (item instanceof Star)
                             return true;
                         return false;
                     });
 
-                    if(stars.length == player.stars.length){
+                    if (stars.length == player.stars.length) {
                         player.stars = [];
                         updateGameStatus('nextlevel');
                     }

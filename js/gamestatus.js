@@ -128,6 +128,6 @@ var GameStatus = function(){
         addStatusCallBack : addStatusCallBack,
         hasNextLevel : hasNextLevel,
         resetLevel : resetLevel
-    }
+    };
 
-}
+};

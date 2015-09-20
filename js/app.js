@@ -152,10 +152,10 @@ Message.prototype.render = function () {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-this.player = new Player();
-this.allEnemies = [];
-this.allItems = [];
-this.allMessages = [];
+var player = new Player();
+var allEnemies = [];
+var allItems = [];
+var allMessages = [];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

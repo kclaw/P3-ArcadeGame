@@ -2,6 +2,11 @@ frontend-nanodegree-arcade-game
 ===============================
 
 
+How to run?
+===============================
+Visit http://kclaw.github.io/P3-ArcadeGame/ to play latest version of game.
+
+
 Story
 ===============================
 On a day, Stars from the sky were dropping into forest.

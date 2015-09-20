@@ -1,5 +1,5 @@
 // Enemies our player must avoid
-var Enemy = function(x, y, speed) {
+var Enemy = function (x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
     this.x = x ? x : 0;
@@ -8,7 +8,7 @@ var Enemy = function(x, y, speed) {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-        //use in collision detection
+    //use in collision detection
     this.boundx = this.x + 0;
     this.boundy = this.y + 75;
     this.boundwidth = 100;
@@ -17,21 +17,21 @@ var Enemy = function(x, y, speed) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed * dt;
     this.boundx = this.x;
 
-    if(collisiondetector.isOutOfWall(this)){
+    if (collisiondetector.isOutOfWall(this)) {
         this.x = 0;
         this.boundx = 0;
     }
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -39,7 +39,7 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function() {
+var Player = function () {
     this.initialx = 200;
     this.initialy = 400;
     this.x = this.initialx;
@@ -59,89 +59,89 @@ var Player = function() {
     this.canMoveDown = true;
 };
 
-Player.prototype.update = function(dx, dy){
-    if(dx && typeof(dx) === 'number' && dx < 0)
+Player.prototype.update = function (dx, dy) {
+    if (dx && typeof (dx) === 'number' && dx < 0)
         this.x += dx;
-    if(dx && typeof(dx) === 'number' && dx > 0)
+    if (dx && typeof (dx) === 'number' && dx > 0)
         this.x += dx;
-    if(dy && typeof(dy) === 'number' && dy < 0)
+    if (dy && typeof (dy) === 'number' && dy < 0)
         this.y += dy;
-    if(dy && typeof(dy) === 'number' && dy > 0)
+    if (dy && typeof (dy) === 'number' && dy > 0)
         this.y += dy;
     this.boundx = this.x + 15;
     this.boundy = this.y + 60;
 };
 
-Player.prototype.render = function(){
+Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.getHeight = function(){
+Player.prototype.getHeight = function () {
     return this.height;
 };
 
-Player.prototype.reset = function(){
-    console.log("player reset: initialx:"+ this.initialx + " initialy:"+this.initialy);
+Player.prototype.reset = function () {
+    console.log("player reset: initialx:" + this.initialx + " initialy:" + this.initialy);
     this.x = this.initialx;
     this.y = this.initialy;
 };
 
-Player.prototype.handleInput = function(key){
-    switch(key){
-        case 'up':
-            if(this.canMoveUp)
-                this.update(0, -20);
-            break;
-        case 'down':
-            if(this.canMoveDown)
-                this.update(0, 20);
-            break;
-        case 'left':
-            if(this.canMoveLeft)
-                this.update(-20, 0);
-            break;
-        case 'right':
-            if(this.canMoveRight)
-                this.update(20, 0);
-            break;
+Player.prototype.handleInput = function (key) {
+    switch (key) {
+    case 'up':
+        if (this.canMoveUp)
+            this.update(0, -20);
+        break;
+    case 'down':
+        if (this.canMoveDown)
+            this.update(0, 20);
+        break;
+    case 'left':
+        if (this.canMoveLeft)
+            this.update(-20, 0);
+        break;
+    case 'right':
+        if (this.canMoveRight)
+            this.update(20, 0);
+        break;
     }
 };
 
 
-var Star = function(x,y){
+var Star = function (x, y) {
     this.eaten = false;
     this.x = x;
     this.y = y;
     this.sprite = 'images/Star.png';
-         //use in collision detection
+    //use in collision detection
     this.boundx = this.x + 5;
     this.boundy = this.y + 55;
     this.boundwidth = 90;
     this.boundheight = 95;
 };
 
-Star.prototype.update = function(eaten){
+Star.prototype.update = function (eaten) {
     this.eaten = eaten;
 };
 
-Star.prototype.render = function(){
-    if(!this.eaten)
+Star.prototype.render = function () {
+    if (!this.eaten)
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
 
-var Message = function(message, x, y){
+var Message = function (message, x, y) {
     this.x = x;
     this.y = y;
     this.message = message;
 };
-Message.prototype.update = function(message, x, y){
+Message.prototype.update = function (message, x, y) {
     this.x = x;
     this.y = y;
     this.message = message;
 };
-Message.prototype.render = function(){
+Message.prototype.render = function () {
     ctx.font = "80px Georgia";
     ctx.strokeText(this.message, this.x, this.y);
 };
@@ -158,7 +158,7 @@ this.allMessages = [];
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',

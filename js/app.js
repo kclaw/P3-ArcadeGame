@@ -90,19 +90,19 @@ Player.prototype.handleInput = function (key) {
     switch (key) {
     case 'up':
         if (this.canMoveUp)
-            this.update(0, -20);
+            this.update(0, -83);
         break;
     case 'down':
         if (this.canMoveDown)
-            this.update(0, 20);
+            this.update(0, 83);
         break;
     case 'left':
         if (this.canMoveLeft)
-            this.update(-20, 0);
+            this.update(-101, 0);
         break;
     case 'right':
         if (this.canMoveRight)
-            this.update(20, 0);
+            this.update(101, 0);
         break;
     }
 };

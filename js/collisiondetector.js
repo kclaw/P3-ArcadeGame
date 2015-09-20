@@ -167,7 +167,7 @@ var CollisionDetector = function (canvas) {
     It would trigger callbacks function inside handler when matches corresponding situation.*/
     function checkCollision() {
         self.enterBelowBoundaryXAxisHandler.forEach(function (handler) {
-            if (handler.object.boundx <= 0) {
+            if (handler.object.boundx <= 101) {
                 console.log('below x-asis boundary is triggered');
                 handler.event();
             } else {
@@ -177,7 +177,7 @@ var CollisionDetector = function (canvas) {
             }
         });
         self.enterAboveBoundaryXAxisHandler.forEach(function (handler) {
-            if (handler.object.boundx + handler.object.boundwidth >= canvas.width) {
+            if (handler.object.boundx + handler.object.boundwidth + 101 >= canvas.width) {
                 console.log('above x-axis boundary is triggered');
                 handler.event();
             } else {
